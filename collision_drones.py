@@ -10,7 +10,13 @@ print(follows[0].get_state())
 plt.ioff()
 plt.show()
 
+# 갑자기 머리를 돌리고 팔로우가 거기로 가는 형태로?
+# 이건 너무 자연스럽다?
+
+count = 0
+
 def animate(frame):
+    global count
         
     plt.cla()
     
@@ -26,12 +32,17 @@ def animate(frame):
     # 리더 방향 화살표로 그리기
     plt.quiver(leader.position[0], leader.position[1], leader.direction[0], leader.direction[1], color='red', scale=10)
     
-    leader.rotate_heading(np.pi/15)
+    if count < 5:
+        leader.rotate_heading(np.pi/5)
+        count += 1
+        
     follows[0].update_all(leader.position, leader.direction)
     
     direction_to_target = follows[0].target_position - follows[0].position
     distance_to_target = np.linalg.norm(direction_to_target)
-    follows[0].position += (direction_to_target / distance_to_target)*0.3
+    
+    if count >= 5:
+        follows[0].position += (direction_to_target / distance_to_target)*0.25
     
     # 그래프 설정
     preset = 5
